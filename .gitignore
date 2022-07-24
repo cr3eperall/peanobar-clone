@@ -6,6 +6,7 @@ target/
 
 !**/peanobar-app
 !**/src/main/resources/application.properties
+!**/src/main/resources/static/
 
 ### STS ###
 .apt_generated
