@@ -8,16 +8,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 /**
  *
  * @author david
  */
 @Configuration
-public class SecurityConfig {
+public class SecurityConfig implements WebMvcConfigurer{
     
     @Autowired
     CustomAuthenticationManager authManager;
@@ -29,7 +33,7 @@ public class SecurityConfig {
         
         http.authorizeHttpRequests()
                 .antMatchers(HttpMethod.POST,"/api/auth/login").permitAll()
-                .antMatchers("/login").permitAll()
+                .antMatchers("/*", "/", "/assets/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/img","/api/order/complete","/api/product","/api/user/balance").hasAnyRole("ADMIN","BAR")
                 .antMatchers(HttpMethod.PUT, "/api/img").hasAnyRole("ADMIN","BAR")
@@ -44,12 +48,27 @@ public class SecurityConfig {
                 .antMatchers(HttpMethod.DELETE,"/api/user","/api/user/classroom").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and().csrf().disable()
+                .logout().disable()
+                //.and().logout().logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler(HttpStatus.OK))).and()
+                .httpBasic().disable()
                 .cors().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and().formLogin().loginPage("/login").successForwardUrl("/home")
                 .and().addFilter(filter);
         return http.build();
     }
+
+    private static final String[] CLASSPATH_RESOURCE_LOCATIONS = {
+            "classpath:/META-INF/resources/", "classpath:/resources/",
+            "classpath:/static/", "classpath:/public/"
+    };
+    
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/**")
+                .addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);
+    }
+    
+    
     
     
 }
