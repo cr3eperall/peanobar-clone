@@ -1,3 +1,3 @@
 [submodule "peanobar-app"]
 	path = peanobar-app
-	url = ./peanobar-app
+	url = https://github.com/cr3eperall04/peanobar-app.git
