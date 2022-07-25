@@ -6,15 +6,11 @@ package com.davidemichelotti.peanobar.dto;
 
 import com.davidemichelotti.peanobar.model.Order;
 import com.davidemichelotti.peanobar.model.OrderItem;
-import com.davidemichelotti.peanobar.model.Product;
 import com.davidemichelotti.peanobar.service.OrderServiceImpl;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 

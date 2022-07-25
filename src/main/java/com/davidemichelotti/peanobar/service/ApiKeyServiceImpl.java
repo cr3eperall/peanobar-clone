@@ -6,7 +6,6 @@ package com.davidemichelotti.peanobar.service;
 
 import com.davidemichelotti.peanobar.dto.UserDto;
 import com.davidemichelotti.peanobar.model.ApiKey;
-import com.davidemichelotti.peanobar.model.User;
 import com.davidemichelotti.peanobar.repository.ApiKeyRepository;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
@@ -16,10 +15,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.xml.bind.DatatypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpServerErrorException;
 

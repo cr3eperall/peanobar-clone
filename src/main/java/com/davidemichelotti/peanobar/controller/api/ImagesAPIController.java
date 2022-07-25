@@ -4,18 +4,12 @@
  */
 package com.davidemichelotti.peanobar.controller.api;
 
-import com.davidemichelotti.peanobar.dto.OrderDto;
-import com.davidemichelotti.peanobar.dto.UserDto;
 import com.davidemichelotti.peanobar.model.Image;
-import com.davidemichelotti.peanobar.model.OrderItem;
-import com.davidemichelotti.peanobar.model.Product;
 import com.davidemichelotti.peanobar.service.ImageServiceImpl;
 import com.davidemichelotti.peanobar.service.OrderServiceImpl;
 import com.davidemichelotti.peanobar.service.ProductServiceImpl;
 import com.davidemichelotti.peanobar.service.UserServiceImpl;
 import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,12 +21,9 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.Mapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;

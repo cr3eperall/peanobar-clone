@@ -5,7 +5,6 @@
 package com.davidemichelotti.peanobar.service;
 
 import com.davidemichelotti.peanobar.dto.UserDto;
-import com.davidemichelotti.peanobar.model.Product;
 import com.davidemichelotti.peanobar.model.Role;
 import com.davidemichelotti.peanobar.model.User;
 import com.davidemichelotti.peanobar.model.Wallet;
@@ -15,7 +14,6 @@ import com.davidemichelotti.peanobar.repository.WalletRepository;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import javax.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;

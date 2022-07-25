@@ -6,9 +6,7 @@ package com.davidemichelotti.peanobar.service;
 
 import com.davidemichelotti.peanobar.dto.UserDto;
 import com.davidemichelotti.peanobar.model.ApiKey;
-import com.davidemichelotti.peanobar.model.User;
 import java.util.UUID;
-import org.springframework.stereotype.Service;
 
 /**
  *

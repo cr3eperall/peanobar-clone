@@ -7,13 +7,10 @@ package com.davidemichelotti.peanobar.dto;
 import com.davidemichelotti.peanobar.model.Order;
 import com.davidemichelotti.peanobar.model.Role;
 import com.davidemichelotti.peanobar.model.User;
-import com.davidemichelotti.peanobar.repository.UserRepository;
 import com.davidemichelotti.peanobar.service.OrderServiceImpl;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 

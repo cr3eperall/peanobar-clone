@@ -10,9 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 /**
  *
@@ -25,11 +23,17 @@ public class ErrController implements ErrorController{
 
     @RequestMapping(value = PATH)
     public String error(HttpServletRequest request, HttpServletResponse response) {
-        if(((String)request.getAttribute(RequestDispatcher.ERROR_REQUEST_URI)).startsWith("/api/")){
+        String uri = (String)request.getAttribute(RequestDispatcher.ERROR_REQUEST_URI);
+        if(uri.startsWith("/api/")){
             return null;
         }
-        response.setStatus(HttpStatus.OK.value());
-        return "forward:/index.html";
+        if(uri.startsWith("/en/")){
+            response.setStatus(HttpStatus.OK.value());
+            return "forward:/en/index.html";
+        }else{
+            response.setStatus(HttpStatus.OK.value());
+            return "forward:/it/index.html";
+        }
     }
 
     public static String getPATH() {
