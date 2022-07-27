@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
 /**
@@ -134,22 +135,15 @@ public class OrdersAPIRestController {
     }
     
     @PostMapping("/complete")
-    public OrderDto completeOrder(@RequestParam("uuid") String uuid){
-        UUID userUUID = UUIDFormatter.format(uuid);
-        UserDto user = userService.findUserByUUID(userUUID);
-        if (user == null) {
-            throw new NullPointerException("User with uuid " + userUUID.toString() + " doesn't exist");
+    public OrderDto completeOrder(@RequestParam("id") long orderId){
+        OrderDto order=orderService.getOrderById(orderId);
+        if (order==null) {
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,"Cannot find order to complete");
         }
-        if(!user.isOrderInProgress()){
-            throw new IllegalArgumentException("There is no order to complete");
+        if(order.getStatus()!=Order.OrderStatus.IN_PROGRESS){
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,"Cannot find order to complete");
         }
-        List<OrderDto> orders=orderService.getOrdersByStatus(Order.OrderStatus.IN_PROGRESS);
-        for (OrderDto order : orders) {
-            if (order.getOwner().equals(userUUID)) {
-                return orderService.updateStatus(order.getId(), Order.OrderStatus.COMPLETED);
-            }
-        }
-        throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR,"Cannot find order to complete");
+        return orderService.updateStatus(order.getId(), Order.OrderStatus.COMPLETED);
     }
     
     private OrderDto getCart(UUID userUUID) {
