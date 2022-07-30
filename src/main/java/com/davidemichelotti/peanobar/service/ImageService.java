@@ -5,12 +5,14 @@
 package com.davidemichelotti.peanobar.service;
 
 import com.davidemichelotti.peanobar.model.Image;
+import java.util.List;
 
 /**
  *
  * @author david
  */
 public interface ImageService {
+    public List<Image> findAll();
     public Image saveImage(byte[] image);
     public Image findImageById(long id);
     public Image updateImage(long id, Image img);

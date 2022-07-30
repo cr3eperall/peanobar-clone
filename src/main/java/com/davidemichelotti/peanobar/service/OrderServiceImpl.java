@@ -29,6 +29,7 @@ public class OrderServiceImpl implements OrderService {
     UserRepository userService;
     @Autowired
     OrderItemsRepository orderItemRepo;
+    //TODO remake paged queries and add getall
 
     @Override
     public OrderDto getOrderById(long id) {

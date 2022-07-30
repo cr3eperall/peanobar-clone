@@ -10,6 +10,8 @@ import com.davidemichelotti.peanobar.service.OrderServiceImpl;
 import com.davidemichelotti.peanobar.service.ProductServiceImpl;
 import com.davidemichelotti.peanobar.service.UserServiceImpl;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +61,18 @@ public class ImagesAPIController {
             return null;
         }
         return imageService.saveImage(data);
+    }
+    
+    @GetMapping("/all")
+    public ResponseEntity<Image[]> getAllImages(){
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        List<Image> repoImgs=imageService.findAll();
+        if (repoImgs==null || repoImgs.isEmpty()) {
+            return new ResponseEntity(new Image[]{}, headers, HttpStatus.NOT_FOUND);
+        }
+        ResponseEntity<Image[]> responseEntity = new ResponseEntity(repoImgs, headers, HttpStatus.OK);
+        return responseEntity;
     }
     
     @GetMapping()

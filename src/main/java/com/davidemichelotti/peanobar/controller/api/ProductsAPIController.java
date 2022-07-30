@@ -30,6 +30,7 @@ public class ProductsAPIController {
     ProductServiceImpl productService;
     @Autowired
     ImageServiceImpl imageService;
+    //TODO add option to disable product
     
     @GetMapping()
     public Product getProduct(@RequestParam("id") int id){

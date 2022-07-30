@@ -6,6 +6,8 @@ package com.davidemichelotti.peanobar.service;
 
 import com.davidemichelotti.peanobar.model.Image;
 import com.davidemichelotti.peanobar.repository.ImageRepository;
+import java.util.ArrayList;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +26,16 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public Image findImageById(long id) {
         return imageRepo.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<Image> findAll() {
+        List<Image> l=new ArrayList<>();
+        Iterable<Image> it=imageRepo.findAll();
+        for (Image img : it) {
+            l.add(img);
+        }
+        return l;
     }
 
     @Override
