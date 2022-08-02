@@ -5,11 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
 public class PeanobarApplication {
+    //TODO add error handling
 
-	public static void main(String[] args) {
-		SpringApplication.run(PeanobarApplication.class, args);
-	}
-        
-        
-
+    public static void main(String[] args) {
+            SpringApplication.run(PeanobarApplication.class, args);
+    }
 }
