@@ -86,6 +86,38 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<Integer> findAllClassrooms() {
+        return userRepo.findAllClassrooms();
+    }
+
+    @Override
+    public int countUsersTotal() {
+        return (int) userRepo.count();
+    }
+    
+    
+
+    @Override
+    public List<UserDto> searchUserByFullname(String fullname) {
+        List<UserDto> l=new ArrayList();
+        Iterable<User> it = userRepo.searchByFullname(fullname);
+        for (User user : it) {
+            l.add(new UserDto(user,orderService));
+        }
+        return l;
+    }
+
+    @Override
+    public List<UserDto> searchUserByUsername(String username) {
+        List<UserDto> l=new ArrayList();
+        Iterable<User> it = userRepo.searchByUsername(username);
+        for (User user : it) {
+            l.add(new UserDto(user,orderService));
+        }
+        return l;
+    }
+    
+    @Override
     public UserDto createUser(UserDto user, String rawPw) {
         UserDto existingUser=findUserByUsername(user.getUsername());
         if (existingUser!=null) {

@@ -11,9 +11,6 @@ import com.davidemichelotti.peanobar.service.OrderServiceImpl;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-
 /**
  *
  * @author david
@@ -28,7 +25,7 @@ public class UserDto {
     private int classroom;
     private ArrayList<OrderDto> orders;
     
-    private ConfigurableApplicationContext context = new AnnotationConfigApplicationContext();
+    //private ConfigurableApplicationContext context = new AnnotationConfigApplicationContext();
     
     public UserDto(UUID uuid, String fullName, String username, String email, Role role, int balance, int classroom, ArrayList<OrderDto> orders) {
         this.uuid = uuid;
@@ -48,7 +45,7 @@ public class UserDto {
         this.role = user.getRole();
         this.balance = user.getWallet().getBalance();
         this.classroom = user.getClassroom();
-        context.refresh();
+        //context.refresh();
         this.orders = (ArrayList<OrderDto>) orderService.getOrdersByUser(user.getUuid());
     }
 

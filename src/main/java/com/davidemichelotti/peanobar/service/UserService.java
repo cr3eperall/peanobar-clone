@@ -23,6 +23,11 @@ public interface UserService {
     
     public List<UserDto> findUsersByClassroom(int classroom);
     public List<UserDto> findAllUsers(int size, int page);
+    public List<Integer> findAllClassrooms();
+    public int countUsersTotal();
+    
+    public List<UserDto> searchUserByUsername(String username);
+    public List<UserDto> searchUserByFullname(String fullname);
     
     public boolean checkPassword(UUID uuid,String rawPassword);
     

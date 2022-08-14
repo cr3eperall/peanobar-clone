@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 
 /**
@@ -97,6 +98,28 @@ public class UsersAPIController {
         return userService.findAllUsers(size, page);
     }
     
+    @GetMapping("/count")
+    public int countUsers(){
+        return userService.countUsersTotal();
+    }
+    
+    @GetMapping("/search")
+    public List<UserDto> searchUser(@RequestParam(name="username",required = false)String username,@RequestParam(name="fullname",required = false)String fullname){
+        if (username==null ^ fullname==null) {
+            if (username!=null) {
+                return userService.searchUserByUsername(username);
+            }else{
+                return userService.searchUserByFullname(fullname);
+            }
+        }
+        throw new HttpClientErrorException(HttpStatus.BAD_REQUEST, "add username or fullname");
+    }
+    
+    @GetMapping("/classrooms")
+    public List<Integer> getAllClassrooms(){
+        return userService.findAllClassrooms();
+    }
+    
     @GetMapping("/classroom")
     public List<UserDto> getUsersByClassroom(@RequestParam("classroom") int classroom){
         return userService.findUsersByClassroom(classroom);
@@ -134,7 +157,7 @@ public class UsersAPIController {
         return userService.updateUser(user.getUuid(), user);
     }
     
-    @PostMapping(path = "changepassword")
+    @PostMapping(path = "/changepassword")
     public ResponseEntity<Object> changePassword(Authentication auth, @RequestParam(name="old",required = true) String oldPassword, @RequestParam(name="new",required = true) String newPassword){
         UserDto user=(UserDto)auth.getPrincipal();
         if (user==null) {
@@ -148,7 +171,7 @@ public class UsersAPIController {
         return new ResponseEntity<>("OK",HttpStatus.OK);
     }
     
-    @PatchMapping(path = "classroom")
+    @PatchMapping(path = "/classroom")
     public List<UserDto> updateEntireClassroom(@RequestParam(name="old") int oldClassroom,@RequestParam(name="new") Integer newClassroom){
         return userService.updateEntireClassroom(oldClassroom, newClassroom);
     }

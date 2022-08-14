@@ -12,6 +12,7 @@ import java.security.SecureRandom;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.Random;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -82,7 +83,9 @@ public class ApiKeyServiceImpl implements ApiKeyService {
     public ApiKey addKey(UUID uuid) {
         ApiKey repoKey=apiKeyRepo.findById(uuid).orElse(new ApiKey(uuid));
         repoKey.setIssuedAt(Timestamp.valueOf(LocalDateTime.now()));
+        System.out.println("set issuedAt");
         repoKey.setApikey(generateKey());
+        System.out.println("generated key");
         return apiKeyRepo.save(repoKey);
     }
 
@@ -100,18 +103,14 @@ public class ApiKeyServiceImpl implements ApiKeyService {
 
     private String generateKey() {
         char[] key=new char[60];
-        try {
-            SecureRandom random = SecureRandom.getInstanceStrong();
-            byte[] bytes = new byte[60];
-            random.nextBytes(bytes);
-            for (int i = 0; i < key.length; i++) {
-                int idx=bytes[i];
-                key[i]=POSSIBLE_KEY_CHARS[Math.abs(idx%POSSIBLE_KEY_CHARS.length)];
-            }
-        } catch (NoSuchAlgorithmException ex) {
-            Logger.getLogger(ApiKeyServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
-            throw new HttpServerErrorException(HttpStatus.INTERNAL_SERVER_ERROR);
+        Random random = new Random();
+        byte[] bytes = new byte[60];
+        random.nextBytes(bytes);
+        for (int i = 0; i < key.length; i++) {
+            int idx=bytes[i];
+            key[i]=POSSIBLE_KEY_CHARS[Math.abs(idx%POSSIBLE_KEY_CHARS.length)];
         }
+        System.out.println("4");
         return String.valueOf(key);
     }
     

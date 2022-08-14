@@ -38,7 +38,7 @@ public class SecurityConfig implements WebMvcConfigurer{
                 .antMatchers(HttpMethod.PUT, "/api/img").hasAnyRole("ADMIN","BAR")
                 .antMatchers(HttpMethod.DELETE, "/api/img").hasAnyRole("ADMIN","BAR")
                 .antMatchers(HttpMethod.PATCH, "/api/product").hasAnyRole("ADMIN","BAR")
-                .antMatchers(HttpMethod.GET, "/it/bar/**","/en/bar/**", "/api/img/all", "/api/order/byuuid","/api/order/contents","/api/order","/api/order/toprocess","/api/user/classroom","/api/user/all","/api/user/byemail","/api/user/byusername","/api/user/byuuid").hasAnyRole("ADMIN","BAR")
+                .antMatchers(HttpMethod.GET, "/it/bar/**","/en/bar/**", "/api/img/all", "/api/order/byuuid","/api/order/contents","/api/order","/api/order/toprocess","/api/user/classroom","/api/user/all","/api/user/byemail","/api/user/byusername","/api/user/byuuid","/api/user/count","/api/user/search","/api/order/count").hasAnyRole("ADMIN","BAR")
                 .antMatchers(HttpMethod.POST, "/api/user/changepassword","/api/order/send","/api/order/cart").hasAnyRole("ADMIN","USER")
                 .antMatchers(HttpMethod.GET, "api/order/ownorders","api/order/countown").hasAnyRole("ADMIN","USER")
                 .antMatchers(HttpMethod.POST,"/api/auth/revoke","/api/order","/api/user").hasRole("ADMIN")

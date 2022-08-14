@@ -66,6 +66,11 @@ public class OrderServiceImpl implements OrderService {
         List<Order> all=orderRepo.findAllByOwnerUuid(uuid);
         return all.size();
     }
+
+    @Override
+    public int countOrdersTotal() {
+        return (int)orderRepo.count();
+    }
     
     public List<OrderDto> page(List<OrderDto> orders, int size, int page){
         List<OrderDto> l=new ArrayList();
@@ -96,8 +101,6 @@ public class OrderServiceImpl implements OrderService {
         }
         return dto;
     }
-    
-    
 
     @Override
     public OrderDto createOrder(OrderDto order) {

@@ -20,6 +20,7 @@ public interface OrderService {
     public List<OrderDto> getOrdersByUser(UUID uuid);
     public List<OrderDto> getOrdersByUserPaged(UUID uuid, int size, int page);
     public int countOrdersByUser(UUID uuid);
+    public int countOrdersTotal();
     public List<OrderItem> getOrderItemsById(long id);
     public List<OrderDto> getOrdersByStatus(Order.OrderStatus status);
     

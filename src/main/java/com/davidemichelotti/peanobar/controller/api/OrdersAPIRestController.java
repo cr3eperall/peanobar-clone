@@ -79,6 +79,11 @@ public class OrdersAPIRestController {
         return orderService.countOrdersByUser(user.getUuid());
     }
     
+    @GetMapping("/count")
+    public int countAllOrders() {
+        return orderService.countOrdersTotal();
+    }
+    
     @GetMapping("/byuuid")
     public List<OrderDto> getOrdersByUUID(@RequestParam("uuid") String uuid) {
         UUID userUUID = UUIDFormatter.format(uuid);
