@@ -78,7 +78,7 @@ public class UserServiceImpl implements UserService {
     public List<UserDto> findAllUsers(int size, int page) {
         List<UserDto> l=new ArrayList();
         int offset=page<2 ? 0 : (size*(page-1));
-        Iterable<User> it=userRepo.findAllPaged(size<0 ? userRepo.count() : size, offset);
+        List<User> it=userRepo.findAllPaged(size<0 ? userRepo.count() : size, offset);
         for (User user : it) {
             l.add(new UserDto(user,orderService));
         }
@@ -94,9 +94,6 @@ public class UserServiceImpl implements UserService {
     public int countUsersTotal() {
         return (int) userRepo.count();
     }
-    
-    
-
     @Override
     public List<UserDto> searchUserByFullname(String fullname) {
         List<UserDto> l=new ArrayList();

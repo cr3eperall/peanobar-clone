@@ -54,11 +54,23 @@ public class OrderServiceImpl implements OrderService {
     public List<OrderDto> getOrdersByUserPaged(UUID uuid, int size, int page) {
         List<Order> all=orderRepo.findAllByOwnerUuid(uuid);
         Collections.reverse(all);
-        List<OrderDto> l=new ArrayList(all.size());
+        List<OrderDto> l=new ArrayList(size);
         for (Order order : all) {
             l.add(new OrderDto(order, this));
         }
         return page(l,size,page);
+    }
+
+    @Override
+    public List<OrderDto> getAllCompletedOrdersPaged(int size, int page) {
+        List<OrderDto> l=new ArrayList<>(size < 1 ? 10 : size);
+        int offset=page<2 ? 0 : (size*(page-1));
+        int notCounted=orderRepo.findAllByStatus(Order.OrderStatus.IN_CART).size()+orderRepo.findAllByStatus(Order.OrderStatus.IN_PROGRESS).size();
+        List<Order> all=orderRepo.findAllCompletedPaged(size<0 ? orderRepo.count()-notCounted : size, offset);
+        for (Order order : all) {
+            l.add(new OrderDto(order, this));
+        }
+        return l;
     }
     
     @Override

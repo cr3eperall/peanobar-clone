@@ -79,6 +79,11 @@ public class OrdersAPIRestController {
         return orderService.countOrdersByUser(user.getUuid());
     }
     
+    @GetMapping("/all")
+    public List<OrderDto> getAllOrders(@RequestParam("size") int size, @RequestParam("page") int page){
+        return orderService.getAllCompletedOrdersPaged(size, page);
+    }
+    
     @GetMapping("/count")
     public int countAllOrders() {
         return orderService.countOrdersTotal();

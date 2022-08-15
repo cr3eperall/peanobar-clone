@@ -19,6 +19,7 @@ public interface OrderService {
     public OrderDto getOrderById(long id);
     public List<OrderDto> getOrdersByUser(UUID uuid);
     public List<OrderDto> getOrdersByUserPaged(UUID uuid, int size, int page);
+    public List<OrderDto> getAllCompletedOrdersPaged(int size, int page);
     public int countOrdersByUser(UUID uuid);
     public int countOrdersTotal();
     public List<OrderItem> getOrderItemsById(long id);
