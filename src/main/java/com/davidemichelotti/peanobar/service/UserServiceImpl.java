@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> findUsersByClassroom(int classroom) {
+    public List<UserDto> findUsersByClassroom(String classroom) {
         List<User> users=userRepo.findAllByClassroom(classroom);
         List<UserDto> dtoUsers=new ArrayList(users.size());
         for (User user : users) {
@@ -86,7 +86,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<Integer> findAllClassrooms() {
+    public List<String> findAllClassrooms() {
         return userRepo.findAllClassrooms();
     }
 
@@ -204,7 +204,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto updateClassroom(UUID uuid, int classroom) {
+    public UserDto updateClassroom(UUID uuid, String classroom) {
         User repoUser=userRepo.findById(uuid).orElse(null);
         if (repoUser==null) {
             return null;
@@ -214,7 +214,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDto> updateEntireClassroom(int oldClassroom, int newClassroom) {
+    public List<UserDto> updateEntireClassroom(String oldClassroom, String newClassroom) {
         List<User> repoUsers=userRepo.findAllByClassroom(oldClassroom);
         List<UserDto> newUsers=new ArrayList<>();
         for (User repoUser : repoUsers) {

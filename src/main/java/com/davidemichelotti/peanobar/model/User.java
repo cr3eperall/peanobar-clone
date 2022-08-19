@@ -54,14 +54,14 @@ public class User implements Serializable {
     @Column(name = "email", columnDefinition = "VARCHAR(128)")
     private String email;
 
-    @Column(name = "classroom", columnDefinition = "INT")
-    private int classroom;
+    @Column(name = "classroom", columnDefinition = "VARCHAR(16)")
+    private String classroom;
 
     @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "uuid", referencedColumnName = "uuid")
     private Wallet wallet;
 
-    public User(UUID uuid, String name, String username, String password, Role role, String email, int classroom, Wallet wallet) {
+    public User(UUID uuid, String name, String username, String password, Role role, String email, String classroom, Wallet wallet) {
         this.uuid = uuid;
         this.name = name;
         this.username = username;
@@ -184,11 +184,11 @@ public class User implements Serializable {
         this.wallet = wallet;
     }
 
-    public int getClassroom() {
+    public String getClassroom() {
         return classroom;
     }
 
-    public void setClassroom(int classroom) {
+    public void setClassroom(String classroom) {
         this.classroom = classroom;
     }
 

@@ -21,9 +21,9 @@ public interface UserService {
     public UserDto findUserByUsername(String username);
     public UserDto findUserByEmail(String email);
     
-    public List<UserDto> findUsersByClassroom(int classroom);
+    public List<UserDto> findUsersByClassroom(String classroom);
     public List<UserDto> findAllUsers(int size, int page);
-    public List<Integer> findAllClassrooms();
+    public List<String> findAllClassrooms();
     public int countUsersTotal();
     
     public List<UserDto> searchUserByUsername(String username);
@@ -34,8 +34,8 @@ public interface UserService {
     public UserDto updateUser(UUID uuid, UserDto user);
     public UserDto updatePassword(UUID uuid, String newRawPassword);
     public UserDto updateRole(UUID uuid, long roleID);
-    public UserDto updateClassroom(UUID uuid, int classroom);
-    public List<UserDto> updateEntireClassroom(int oldClassroom, int newClassroom);
+    public UserDto updateClassroom(UUID uuid, String classroom);
+    public List<UserDto> updateEntireClassroom(String oldClassroom, String newClassroom);
     public UserDto updateBalance(UUID uuid, int balance);
     
     public int deleteUserByUUID(UUID uuid);

@@ -116,17 +116,17 @@ public class UsersAPIController {
     }
     
     @GetMapping("/classrooms")
-    public List<Integer> getAllClassrooms(){
+    public List<String> getAllClassrooms(){
         return userService.findAllClassrooms();
     }
     
     @GetMapping("/classroom")
-    public List<UserDto> getUsersByClassroom(@RequestParam("classroom") int classroom){
+    public List<UserDto> getUsersByClassroom(@RequestParam("classroom") String classroom){
         return userService.findUsersByClassroom(classroom);
     }
     
     @PostMapping()
-    public UserDto createNewUser(@RequestParam(name="name",required = true) String name, @RequestParam(name="username",required = true) String username,@RequestParam(name="email",required = true) String email,@RequestParam(name="role_id",required = true) long role_id, @RequestParam(name="classroom",required = true) int classroom, @RequestParam(name="password",required = true) String password){
+    public UserDto createNewUser(@RequestParam(name="name",required = true) String name, @RequestParam(name="username",required = true) String username,@RequestParam(name="email",required = true) String email,@RequestParam(name="role_id",required = true) long role_id, @RequestParam(name="classroom",required = true) String classroom, @RequestParam(name="password",required = true) String password){
         Role role=userService.findRoleById(role_id);
         if (role==null) {
             throw new NullPointerException("Role with id "+role_id+" doesn't exist");
@@ -140,7 +140,7 @@ public class UsersAPIController {
     }
     
     @PatchMapping()
-    public UserDto updateUser(@RequestParam(name="uuid",required = true) String uuid, @RequestParam(name="name",required = false) String name,@RequestParam(name="email",required = false) String email,@RequestParam(name="classroom",required = false) Integer classroom){
+    public UserDto updateUser(@RequestParam(name="uuid",required = true) String uuid, @RequestParam(name="name",required = false) String name,@RequestParam(name="email",required = false) String email,@RequestParam(name="classroom",required = false) String classroom){
         UserDto user=userService.findUserByUUID(UUIDFormatter.format(uuid));
         if (user==null) {
             throw new NullPointerException("User with uuid "+UUIDFormatter.format(uuid)+" doesn't exist");
@@ -172,7 +172,7 @@ public class UsersAPIController {
     }
     
     @PatchMapping(path = "/classroom")
-    public List<UserDto> updateEntireClassroom(@RequestParam(name="old") int oldClassroom,@RequestParam(name="new") Integer newClassroom){
+    public List<UserDto> updateEntireClassroom(@RequestParam(name="old") String oldClassroom,@RequestParam(name="new") String newClassroom){
         return userService.updateEntireClassroom(oldClassroom, newClassroom);
     }
     
@@ -197,7 +197,7 @@ public class UsersAPIController {
     }
     
     @DeleteMapping("/classroom")
-    public ResponseEntity<Object> deleteClassroom(@RequestParam(name="classroom") int classroom){
+    public ResponseEntity<Object> deleteClassroom(@RequestParam(name="classroom") String classroom){
         List<UserDto> users=userService.findUsersByClassroom(classroom);
         if (users.isEmpty()) {
             throw new NullPointerException("Users with classroom "+classroom+" doesn't exist");

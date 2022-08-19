@@ -22,12 +22,12 @@ public class UserDto {
     private String email;
     private Role role;
     private int balance;
-    private int classroom;
+    private String classroom;
     private ArrayList<OrderDto> orders;
     
     //private ConfigurableApplicationContext context = new AnnotationConfigApplicationContext();
     
-    public UserDto(UUID uuid, String fullName, String username, String email, Role role, int balance, int classroom, ArrayList<OrderDto> orders) {
+    public UserDto(UUID uuid, String fullName, String username, String email, Role role, int balance, String classroom, ArrayList<OrderDto> orders) {
         this.uuid = uuid;
         this.fullName = fullName;
         this.username = username;
@@ -153,11 +153,11 @@ public class UserDto {
         return "UserDto{" + "uuid=" + uuid + ", fullName=" + fullName + ", username=" + username + ", email=" + email + ", role=" + role + ", balance=" + balance + ", classroom=" + classroom + '}';
     }
 
-    public int getClassroom() {
+    public String getClassroom() {
         return classroom;
     }
 
-    public void setClassroom(int classroom) {
+    public void setClassroom(String classroom) {
         this.classroom = classroom;
     }
 
