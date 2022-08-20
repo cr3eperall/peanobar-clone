@@ -68,9 +68,7 @@ public class OrderServiceImpl implements OrderService {
         int notCounted=orderRepo.findAllByStatus(Order.OrderStatus.IN_CART).size()+orderRepo.findAllByStatus(Order.OrderStatus.IN_PROGRESS).size();
         List<Order> all=orderRepo.findAllCompletedPaged(size<0 ? orderRepo.count()-notCounted : size, offset);
         for (Order order : all) {
-            if (order.getOwner()!=null) {
-                l.add(new OrderDto(order, this));
-            }
+            l.add(new OrderDto(order, this));
         }
         return l;
     }
