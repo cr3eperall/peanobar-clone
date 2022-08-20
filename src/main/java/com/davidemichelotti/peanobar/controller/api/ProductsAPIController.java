@@ -4,13 +4,18 @@
  */
 package com.davidemichelotti.peanobar.controller.api;
 
+import com.davidemichelotti.peanobar.dto.UserDto;
 import com.davidemichelotti.peanobar.model.Image;
 import com.davidemichelotti.peanobar.model.Product;
+import com.davidemichelotti.peanobar.model.Role;
 import com.davidemichelotti.peanobar.service.ImageServiceImpl;
 import com.davidemichelotti.peanobar.service.ProductServiceImpl;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -42,8 +47,20 @@ public class ProductsAPIController {
     }
     
     @GetMapping("/all")
-    public List<Product> getAllProducts(){
-        return productService.findProducts();
+    public List<Product> getAllProducts(Authentication auth){
+        UserDto user=(UserDto)auth.getPrincipal();
+        if (user.getRole().getName().equals("ROLE_USER")) {
+            ArrayList ret =new ArrayList<Product>();
+            List<Product> orig=productService.findProducts();
+            for (Product prod : orig) {
+                if (!prod.getName().startsWith("[DISABLED]")) {
+                    ret.add(prod);
+                }
+            }
+            return ret;
+        }else{
+            return productService.findProducts();
+        }
     }
     
     @PostMapping()
@@ -83,4 +100,11 @@ public class ProductsAPIController {
         }
         return productService.updateProduct(id, product);
     }
+    
+    @DeleteMapping()
+    public int deleteProduct(@RequestParam("id") long id){
+        return productService.deleteProduct(id);
+    }
+    
+    
 }

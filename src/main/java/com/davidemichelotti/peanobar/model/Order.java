@@ -17,6 +17,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import org.hibernate.annotations.NotFound;
+import org.hibernate.annotations.NotFoundAction;
 
 /**
  *
@@ -32,8 +34,9 @@ public class Order implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
+    @NotFound(action = NotFoundAction.IGNORE)
     @ManyToOne
-    @JoinColumn(name = "owner_uuid", referencedColumnName = "uuid",nullable = false)
+    @JoinColumn(name = "owner_uuid", referencedColumnName = "uuid", nullable = false)
     private User owner;
     
     private Integer total;

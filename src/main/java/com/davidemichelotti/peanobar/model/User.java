@@ -47,7 +47,7 @@ public class User implements Serializable {
     @Column(name = "password", columnDefinition = "CHAR(60)")
     private String password;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "role_id", nullable = false, referencedColumnName = "id")
     private Role role;
 

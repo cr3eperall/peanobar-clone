@@ -23,5 +23,5 @@ public interface ProductService {
     public Product updateProductImg(long id, Long imgId);
     public Product updateProductType(long id, String type);
     
-    
+    public int deleteProduct(long product);
 }

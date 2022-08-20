@@ -113,7 +113,7 @@ CREATE TABLE IF NOT EXISTS `peanobar`.`users` (
   `password` CHAR(60) NOT NULL,
   `role_id` BIGINT NOT NULL DEFAULT '0',
   `email` VARCHAR(128) CHARACTER SET 'utf8mb3' NULL DEFAULT NULL,
-  `classroom` INT NOT NULL,
+  `classroom` VARCHAR(16) NOT NULL,
   PRIMARY KEY (`uuid`),
   UNIQUE INDEX `id_UNIQUE` (`uuid` ASC) VISIBLE,
   UNIQUE INDEX `password_UNIQUE` (`password` ASC) VISIBLE)

@@ -41,7 +41,7 @@ public class OrderDto {
     public OrderDto(Order order, OrderServiceImpl orderService) {
         this.id= order.getId();
         this.total = order.getTotal();
-        this.owner=order.getOwner().getUuid();
+        this.owner=order.getOwner()==null ? null : order.getOwner().getUuid();
         this.madeAt = order.getMadeAt().toLocalDateTime();
         this.status = order.getStatus();
         this.contents = orderService.getOrderItemsById(order.getId());

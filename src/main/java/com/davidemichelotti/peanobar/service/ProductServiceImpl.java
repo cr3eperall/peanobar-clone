@@ -96,5 +96,24 @@ public class ProductServiceImpl implements ProductService {
         }
         return l;
     }
+
+    @Override
+    public int deleteProduct(long productId) {
+        Product original=findProductById(productId);
+        if (original!=null) {
+            if (original.getName().startsWith("[DISABLED]")) {
+                original.setName(original.getName().replace("[DISABLED]", ""));
+                productRepo.save(original);
+                return 1;
+            }else{
+                original.setName("[DISABLED]"+original.getName());
+                productRepo.save(original);
+                return 0;
+            }
+        }
+        return -1;
+    }
+    
+    
     
 }

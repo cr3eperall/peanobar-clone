@@ -241,7 +241,6 @@ public class UserServiceImpl implements UserService {
             return -1;
         }
         userRepo.delete(repoUser);
-        walletRepo.deleteById(uuid);
         return 0;
     }
 
