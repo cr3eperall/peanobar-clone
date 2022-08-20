@@ -7,6 +7,7 @@ git clone --recursive https://github.com/cr3eperall04/peanobar-clone.git
 ```
 
 # Build
+Before building you need to edit peanobar-clone/src/main/resources/application.properties.example with the context path, database url and credentials.
 ```sh
 cd peanobar-clone/
 ./mvnw clean install
