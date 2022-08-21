@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -121,6 +122,11 @@ public class ImagesAPIController {
     @ExceptionHandler(NullPointerException.class)
     public ResponseEntity<Object> nullPointerEx(NullPointerException ex){
         return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
+    }
+    
+    @ExceptionHandler(IOException.class)
+    public ResponseEntity<Object> serverEx(IOException ex){
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.PAYLOAD_TOO_LARGE);
     }
     
 }

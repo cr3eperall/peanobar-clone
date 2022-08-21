@@ -21,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -210,6 +211,26 @@ public class UsersAPIController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+    
+    @ExceptionHandler(NullPointerException.class)
+    public ResponseEntity<Object> nullPointerEx(NullPointerException ex){
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.NOT_FOUND);
+    }
+    
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> nullPointerEx(IllegalArgumentException ex){
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
+    }
+    
+    @ExceptionHandler(HttpClientErrorException.class)
+    public ResponseEntity<Object> serverEx(HttpClientErrorException ex){
+        return new ResponseEntity<>(ex.getMessage(),ex.getStatusCode());
+    }
+    
+    @ExceptionHandler(HttpServerErrorException.class)
+    public ResponseEntity<Object> serverEx(HttpServerErrorException ex){
+        return new ResponseEntity<>(ex.getMessage(),ex.getStatusCode());
     }
     
 }

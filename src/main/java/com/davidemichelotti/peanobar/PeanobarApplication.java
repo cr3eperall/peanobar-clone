@@ -9,7 +9,6 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 @ComponentScan(basePackages = "com.davidemichelotti.peanobar")
 public class PeanobarApplication extends SpringBootServletInitializer {
-    //TODO add error handling
     public static void main(String[] args) {
         SpringApplication.run(PeanobarApplication.class, args);
     }
