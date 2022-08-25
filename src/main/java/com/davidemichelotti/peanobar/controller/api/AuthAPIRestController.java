@@ -7,8 +7,12 @@ package com.davidemichelotti.peanobar.controller.api;
 import com.davidemichelotti.peanobar.dto.UserDto;
 import com.davidemichelotti.peanobar.model.ApiKey;
 import com.davidemichelotti.peanobar.service.ApiKeyServiceImpl;
+import com.davidemichelotti.peanobar.service.MailServiceImpl;
 import com.davidemichelotti.peanobar.service.UserServiceImpl;
 import com.davidemichelotti.peanobar.util.UUIDFormatter;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -36,6 +40,8 @@ public class AuthAPIRestController {
     UserServiceImpl userService;
     @Autowired
     ApiKeyServiceImpl apiKeyService;
+    @Autowired
+    MailServiceImpl mailService;
     
     @PostMapping("/login")
     public ApiKey getKey(@RequestParam("username") String username,@RequestParam("password") String password,HttpServletResponse response){
@@ -49,6 +55,38 @@ public class AuthAPIRestController {
             return null;
         }
         return apiKeyService.addKey(user.getUuid());
+    }
+    
+    @GetMapping("/forgot")
+    public ResponseEntity<Object> forgotSendMail(@RequestParam("email") String email, @RequestParam(value = "lang", required = false) String lang){
+        UserDto user=userService.findUserByEmail(email);
+        if (user==null) {
+            try {
+                //TODO wait to simulate email send;
+                Thread.sleep((long)(Math.random()*2000+1500));
+            } catch (InterruptedException ex) {
+                Logger.getLogger(AuthAPIRestController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        String token=apiKeyService.updateResetToken(user.getUuid()).getPasswordResetToken();
+        mailService.sendMailToken(token, user.getFullName(), user.getEmail(),Locale.forLanguageTag(Locale.forLanguageTag(lang!=null ? lang : "it").stripExtensions().getLanguage()));
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+    
+    @PostMapping("newpw")
+    public ResponseEntity<Object> setNewPassword(@RequestParam("username") String username,@RequestParam("token") String token, @RequestParam("password") String newPassword){
+        UserDto user=userService.findUserByUsername(username);
+        if (user==null) {
+            return new ResponseEntity<>("This user doesn't exist",HttpStatus.BAD_REQUEST);
+        }
+        if(apiKeyService.verifyResetToken(user.getUuid(), token)){
+            System.out.println("verified");
+            userService.updatePassword(user.getUuid(), newPassword);
+            return new ResponseEntity<>("CHANGED",HttpStatus.OK);
+        }
+        System.out.println("not verified");
+        return new ResponseEntity<>(HttpStatus.OK);
     }
     
     @PostMapping("/revoke")
@@ -81,5 +119,10 @@ public class AuthAPIRestController {
     @ExceptionHandler(HttpServerErrorException.class)
     public ResponseEntity<Object> serverEx(HttpServerErrorException ex){
         return new ResponseEntity<>(ex.getMessage(),ex.getStatusCode());
+    }
+    
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<Object> serverEx(IllegalArgumentException ex){
+        return new ResponseEntity<>(ex.getMessage(),HttpStatus.BAD_REQUEST);
     }
 }

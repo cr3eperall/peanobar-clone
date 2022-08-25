@@ -41,6 +41,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public OrderDto getCartOrderForUUID(UUID uuid) {
+        Order order = orderRepo.findCartOrderByUUID(uuid);
+        if (order==null) {
+            return null;
+        }
+        return new OrderDto(order, this);
+    }
+
+    @Override
     public List<OrderDto> getOrdersByUser(UUID uuid) {
         List<Order> orders = orderRepo.findAllByOwnerUuid(uuid);
         List<OrderDto> dto=new ArrayList(orders.size());
@@ -210,6 +219,7 @@ public class OrderServiceImpl implements OrderService {
         }
         Order repoOrder =orderRepo.findById(orderId).get();
         repoOrder.setStatus(status);
+        repoOrder.setMadeAt(Timestamp.valueOf(LocalDateTime.now()));
         return new OrderDto(orderRepo.save(repoOrder),this);
     }
 

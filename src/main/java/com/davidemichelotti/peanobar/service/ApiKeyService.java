@@ -14,6 +14,7 @@ import java.util.UUID;
  */
 public interface ApiKeyService {
     public boolean verifyKey(UUID uuid, String key);
+    public boolean verifyResetToken(UUID uuid, String token);
     public ApiKey getKeyByUUID(UUID uuid);
     public ApiKey getKeyByUser(UserDto user);
     
@@ -24,5 +25,8 @@ public interface ApiKeyService {
     public ApiKey addKey(UUID uuid);
     
     public ApiKey updateKey(UUID uuid, ApiKey key);
+    
+    public ApiKey updateResetToken(UUID uuid, String rawToken);
+    public ApiKey updateResetToken(UUID uuid);
     
 }

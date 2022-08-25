@@ -24,6 +24,7 @@ public interface OrderService {
     public int countOrdersTotal();
     public List<OrderItem> getOrderItemsById(long id);
     public List<OrderDto> getOrdersByStatus(Order.OrderStatus status);
+    public OrderDto getCartOrderForUUID(UUID uuid);
     
     public OrderDto createOrder(OrderDto order);
     

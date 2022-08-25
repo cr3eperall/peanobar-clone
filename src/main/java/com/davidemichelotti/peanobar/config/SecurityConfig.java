@@ -4,15 +4,21 @@
  */
 package com.davidemichelotti.peanobar.config;
 
+import java.util.Locale;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.thymeleaf.context.Context;
+import org.thymeleaf.spring5.SpringTemplateEngine;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+import org.thymeleaf.templateresolver.ITemplateResolver;
 
 /**
  *
@@ -30,7 +36,8 @@ public class SecurityConfig implements WebMvcConfigurer{
         filter.setAuthenticationManager(authManager);
         
         http.authorizeHttpRequests()
-                .antMatchers(HttpMethod.POST,"/api/auth/login").permitAll()
+                .antMatchers(HttpMethod.POST,"/api/auth/login","/api/auth/newpw").permitAll()
+                .antMatchers(HttpMethod.GET,"/api/auth/forgot").permitAll()
                 .antMatchers("/*","/en/*", "/en/", "/en/assets/**").permitAll()
                 .antMatchers("/it/*", "/it/", "/it/assets/**").permitAll()
                 .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()
@@ -67,7 +74,29 @@ public class SecurityConfig implements WebMvcConfigurer{
                 .addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);
     }
     
+    public ITemplateResolver thymeleafTemplateResolver() {
+        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+        templateResolver.setPrefix("mail-templates/");
+        templateResolver.setSuffix(".html");
+        templateResolver.setTemplateMode("HTML");
+        templateResolver.setCharacterEncoding("UTF-8");
+        templateResolver.setCheckExistence(true);
+        return templateResolver;
+    }
     
+    @Bean
+    public ResourceBundleMessageSource emailMessageSource() {
+        ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+        messageSource.setBasename("mail-templates/mailMessages");
+        return messageSource;
+    }
     
+    @Bean
+    public SpringTemplateEngine thymeleafTemplateEngine() {
+        SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+        templateEngine.setTemplateResolver(thymeleafTemplateResolver());
+        templateEngine.setTemplateEngineMessageSource(emailMessageSource());
+        return templateEngine;
+    }
     
 }

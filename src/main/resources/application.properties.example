@@ -6,5 +6,17 @@ spring.datasource.password=
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
 server.compression.enabled=true
 #logging.file.path=/var/log/tomcat9/peanobar-clone
+peanobar.keyDurationHours=12
+peanobar.url=
+peanobar.startAcceptingOrders=07:50
+peanobar.stopAcceptingOrders=14:00
 #spring.jpa.show-sql=true
 spring.servlet.multipart.max-file-size=16777215
+
+# Mail
+spring.mail.host=
+spring.mail.port=
+spring.mail.username=
+spring.mail.password=
+spring.mail.properties.mail.smtp.auth=
+spring.mail.properties.mail.smtp.starttls.enable=

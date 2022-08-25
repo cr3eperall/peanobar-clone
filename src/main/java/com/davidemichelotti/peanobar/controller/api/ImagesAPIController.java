@@ -10,7 +10,6 @@ import com.davidemichelotti.peanobar.service.OrderServiceImpl;
 import com.davidemichelotti.peanobar.service.ProductServiceImpl;
 import com.davidemichelotti.peanobar.service.UserServiceImpl;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -28,7 +27,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
 /**
@@ -50,7 +48,7 @@ public class ImagesAPIController {
     ImageServiceImpl imageService;
     
     @PostMapping()
-    public Image uploadImage(@RequestParam("img") MultipartFile img){
+    public Image uploadImage(@RequestParam("img") MultipartFile img) throws IOException{
         byte[] data=null;
         try {
             data=img.getBytes();

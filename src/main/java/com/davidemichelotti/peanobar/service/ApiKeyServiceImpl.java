@@ -7,34 +7,47 @@ package com.davidemichelotti.peanobar.service;
 import com.davidemichelotti.peanobar.dto.UserDto;
 import com.davidemichelotti.peanobar.model.ApiKey;
 import com.davidemichelotti.peanobar.repository.ApiKeyRepository;
+import java.nio.ByteBuffer;
 import java.sql.Timestamp;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ApiKeyServiceImpl implements ApiKeyService {
     
-    public static final int KEY_DURATION_HOURS=12;
+    @Value("${peanobar.keyDurationHours}")
+    int KEY_DURATION_HOURS;
     @Autowired
     ApiKeyRepository apiKeyRepo;
-
+    @Autowired
+    PasswordEncoder passwordEncoder;
+    
     @Override
     public boolean verifyKey(UUID uuid, String key) {
         ApiKey repoKey=getKeyByUUID(uuid);
         if (repoKey==null) {
             return false;
         }
-        if (Duration.between(repoKey.getIssuedAt().toLocalDateTime(),LocalDateTime.now()).toHours()>12) {
+        if (Duration.between(repoKey.getIssuedAt().toLocalDateTime(),LocalDateTime.now()).toHours()>KEY_DURATION_HOURS) {
             return false;
         }
-        if (!repoKey.getApikey().equals(key)) {
+        return repoKey.getApikey().equals(key);
+    }
+    
+    @Override
+    public boolean verifyResetToken(UUID uuid, String token) {
+        ApiKey repoKey=getKeyByUUID(uuid);
+        if (repoKey==null) {
+            System.out.println("null repokey");
             return false;
         }
-        return true;
+        return passwordEncoder.matches(token, repoKey.getPasswordResetToken());
     }
     
     @Override
@@ -70,6 +83,7 @@ public class ApiKeyServiceImpl implements ApiKeyService {
         ApiKey repoKey=apiKeyRepo.findById(uuid).orElse(new ApiKey(uuid));
         repoKey.setIssuedAt(Timestamp.valueOf(LocalDateTime.now()));
         repoKey.setApikey(key.getApikey());
+        repoKey.setPasswordResetToken(null);
         return apiKeyRepo.save(repoKey);
     }
 
@@ -77,34 +91,73 @@ public class ApiKeyServiceImpl implements ApiKeyService {
     public ApiKey addKey(UUID uuid) {
         ApiKey repoKey=apiKeyRepo.findById(uuid).orElse(new ApiKey(uuid));
         repoKey.setIssuedAt(Timestamp.valueOf(LocalDateTime.now()));
-        System.out.println("set issuedAt");
         repoKey.setApikey(generateKey());
-        System.out.println("generated key");
+        repoKey.setPasswordResetToken(null);
         return apiKeyRepo.save(repoKey);
     }
 
     @Override
-    public ApiKey updateKey(UUID uuid, ApiKey key) {
+    public ApiKey updateKey(UUID uuid, ApiKey rawKey) {
         ApiKey repoKey=apiKeyRepo.findById(uuid).orElse(null);
         if (repoKey==null) {
             return null;
         }
         repoKey.setIssuedAt(Timestamp.valueOf(LocalDateTime.now()));
-        repoKey.setApikey(key.getApikey());
+        repoKey.setApikey(rawKey.getApikey());
+        repoKey.setPasswordResetToken(null);
         return apiKeyRepo.save(repoKey);
     }
+
+    @Override
+    public ApiKey updateResetToken(UUID uuid, String rawToken) {
+        ApiKey repoKey=apiKeyRepo.findById(uuid).orElse(new ApiKey(uuid));
+        if (repoKey.getApikey()==null) {
+            repoKey.setIssuedAt(Timestamp.valueOf(LocalDateTime.now()));
+            repoKey.setApikey(generateKey());
+        }
+        if (rawToken!=null) {
+            repoKey.setPasswordResetToken(passwordEncoder.encode(rawToken));
+        }else{
+            repoKey.setPasswordResetToken(null);
+        }
+        ApiKey saved=apiKeyRepo.save(repoKey);
+        saved.setPasswordResetToken(rawToken);
+        return saved;
+    }
+    
+    @Override
+    public ApiKey updateResetToken(UUID uuid) {
+        ApiKey repoKey=apiKeyRepo.findById(uuid).orElse(new ApiKey(uuid));
+        if (repoKey.getApikey()==null) {
+            repoKey.setIssuedAt(Timestamp.valueOf(LocalDateTime.now()));
+            repoKey.setApikey(generateKey());
+        }
+        String token=generateKey();
+        repoKey.setPasswordResetToken(passwordEncoder.encode(token));
+        ApiKey saved=apiKeyRepo.save(repoKey);
+        saved.setPasswordResetToken(token);
+        return saved;
+    }
+    
     private static final char[] POSSIBLE_KEY_CHARS="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890.-_".toCharArray();
 
     private String generateKey() {
+        UUID uuid=UUID.randomUUID();
+        ByteBuffer buffer = ByteBuffer.allocate(16);
+        buffer.putLong(uuid.getMostSignificantBits());
+        buffer.putLong(uuid.getLeastSignificantBits());
+        byte[] salt=buffer.array();
         char[] key=new char[60];
         Random random = new Random();
         byte[] bytes = new byte[60];
         random.nextBytes(bytes);
+        for (int i = 0; i < bytes.length; i++) {
+            bytes[i]=(byte)(bytes[i]^salt[(int)Math.abs(Math.random()*bytes[i])%16]);
+        }
         for (int i = 0; i < key.length; i++) {
             int idx=bytes[i];
             key[i]=POSSIBLE_KEY_CHARS[Math.abs(idx%POSSIBLE_KEY_CHARS.length)];
         }
-        System.out.println("4");
         return String.valueOf(key);
     }
     

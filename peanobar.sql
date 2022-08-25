@@ -20,6 +20,7 @@ USE `peanobar` ;
 CREATE TABLE IF NOT EXISTS `peanobar`.`api` (
   `uuid` BINARY(16) NOT NULL,
   `apikey` CHAR(60) NULL DEFAULT NULL,
+  `password_reset_token` CHAR(60) NULL DEFAULT NULL,
   `issued_at` DATETIME NULL DEFAULT NULL,
   PRIMARY KEY (`uuid`),
   UNIQUE INDEX `uuid_UNIQUE` (`uuid` ASC) VISIBLE)

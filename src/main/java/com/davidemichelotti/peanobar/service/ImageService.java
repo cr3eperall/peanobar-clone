@@ -5,6 +5,7 @@
 package com.davidemichelotti.peanobar.service;
 
 import com.davidemichelotti.peanobar.model.Image;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ import java.util.List;
  */
 public interface ImageService {
     public List<Image> findAll();
-    public Image saveImage(byte[] image);
+    public Image saveImage(byte[] image) throws IOException;
     public Image findImageById(long id);
     public Image updateImage(long id, Image img);
     public int deleteImage(long id);

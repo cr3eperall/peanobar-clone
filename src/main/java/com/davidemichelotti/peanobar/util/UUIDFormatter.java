@@ -12,9 +12,6 @@ import java.util.UUID;
  */
 public class UUIDFormatter {
     public static UUID format(String rawWuid){
-        if(rawWuid==null|| rawWuid=="null"){
-            return UUID.fromString("00000000-0000-0000-000000000000");
-        }
         UUID uuid;
         if (rawWuid.split("-").length != 5) {
             uuid = UUID.fromString(rawWuid.replaceFirst(

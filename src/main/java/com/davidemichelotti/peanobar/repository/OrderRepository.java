@@ -19,4 +19,6 @@ public interface OrderRepository extends CrudRepository<Order, Long> {
     public List<Order> findAllByStatus(Order.OrderStatus status);
     @Query(value = "SELECT * FROM orders WHERE status = 'COMPLETED' limit ?1 offset ?2",nativeQuery = true)
     public List<Order> findAllCompletedPaged(long limit, long offset);
+    @Query(value="SELECT * FROM orders WHERE status = 'IN_CART' AND owner_uuid = ?1 limit 1",nativeQuery = true)
+    public Order findCartOrderByUUID(UUID ownerUuid);
 }

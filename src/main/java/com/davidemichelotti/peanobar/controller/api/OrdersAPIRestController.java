@@ -4,6 +4,7 @@
  */
 package com.davidemichelotti.peanobar.controller.api;
 
+import com.davidemichelotti.peanobar.config.ConfigProperties;
 import com.davidemichelotti.peanobar.dto.OrderDto;
 import com.davidemichelotti.peanobar.dto.UserDto;
 import com.davidemichelotti.peanobar.model.Order;
@@ -14,10 +15,12 @@ import com.davidemichelotti.peanobar.service.ProductServiceImpl;
 import com.davidemichelotti.peanobar.service.UserServiceImpl;
 import com.davidemichelotti.peanobar.util.UUIDFormatter;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -46,6 +49,8 @@ public class OrdersAPIRestController {
     OrderServiceImpl orderService;
     @Autowired 
     ProductServiceImpl productService;
+    @Autowired
+    ConfigProperties config;
     
     @PostMapping("/cart")
     public OrderDto addToOwnCart(Authentication auth,@RequestParam("product") long productId, @RequestParam("q") byte quantity) {
@@ -127,6 +132,11 @@ public class OrdersAPIRestController {
     @PostMapping("/send")
     public ResponseEntity<OrderDto> sendOrder(Authentication auth){
         UserDto user=(UserDto)auth.getPrincipal();
+        if(user.getRole().getName().equals("ROLE_USER")){
+            if (LocalTime.now().isBefore(config.getStartAcceptingOrders())||LocalTime.now().isAfter(config.getStopAcceptingOrders())) {
+                return new ResponseEntity("The bar doesnt accept orders at this time",HttpStatus.SERVICE_UNAVAILABLE);
+            }
+        }
         OrderDto cart = user.getCartOrder();
         if(cart==null || cart.getContents().isEmpty()){
             return new ResponseEntity("Cart is empty",HttpStatus.BAD_REQUEST);

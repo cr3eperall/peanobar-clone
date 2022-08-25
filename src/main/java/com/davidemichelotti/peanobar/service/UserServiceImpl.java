@@ -5,9 +5,11 @@
 package com.davidemichelotti.peanobar.service;
 
 import com.davidemichelotti.peanobar.dto.UserDto;
+import com.davidemichelotti.peanobar.model.ApiKey;
 import com.davidemichelotti.peanobar.model.Role;
 import com.davidemichelotti.peanobar.model.User;
 import com.davidemichelotti.peanobar.model.Wallet;
+import com.davidemichelotti.peanobar.repository.ApiKeyRepository;
 import com.davidemichelotti.peanobar.repository.RoleRepository;
 import com.davidemichelotti.peanobar.repository.UserRepository;
 import com.davidemichelotti.peanobar.repository.WalletRepository;
@@ -26,6 +28,8 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepo;
     @Autowired
     WalletRepository walletRepo;
+    @Autowired
+    ApiKeyRepository apiKeyRepo;
     @Autowired
     RoleRepository roleRepo;
     @Autowired
@@ -186,6 +190,11 @@ public class UserServiceImpl implements UserService {
             return null;
         }
         repoUser.setPassword(pwEncoder.encode(newRawPassword));
+        ApiKey key =apiKeyRepo.findById(repoUser.getUuid()).orElse(null);
+        if (key!=null) {
+            key.setPasswordResetToken(null);
+            apiKeyRepo.save(key);
+        }
         return new UserDto(userRepo.save(repoUser),orderService);
     }
 
@@ -241,6 +250,8 @@ public class UserServiceImpl implements UserService {
             return -1;
         }
         userRepo.delete(repoUser);
+        walletRepo.deleteById(repoUser.getUuid());
+        apiKeyRepo.deleteById(repoUser.getUuid());
         return 0;
     }
 
@@ -252,8 +263,7 @@ public class UserServiceImpl implements UserService {
             }
         }
         for (UUID user : users) {
-            userRepo.deleteById(user);
-            walletRepo.deleteById(user);
+            deleteUserByUUID(user);
         }
         return 0;
     }

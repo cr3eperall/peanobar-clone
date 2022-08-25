@@ -18,6 +18,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  *
@@ -37,9 +39,11 @@ public class OrderItem implements Serializable {
     private Long id;
     @ManyToOne()
     @JoinColumn(name = "order_id", nullable = false, referencedColumnName = "id")
+    @Fetch(value = FetchMode.JOIN)
     private Order order;
     @ManyToOne()
     @JoinColumn(name = "product_id", nullable = false, referencedColumnName = "id")
+    @Fetch(value = FetchMode.JOIN)
     private Product product;
     @Basic(optional = false)
     @Column(name = "quantity")

@@ -4,6 +4,7 @@
  */
 package com.davidemichelotti.peanobar.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -16,6 +17,8 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 /**
  *
@@ -32,11 +35,11 @@ public class ApiKey implements Serializable {
     @Basic(optional = false)
     @Column(name = "uuid")
     private UUID uuid;
-    @OneToOne
-    @JoinColumn(name = "uuid",referencedColumnName = "uuid",nullable = false)
-    private User owner;
     @Column(name = "apikey")
     private String apikey;
+    @Column(name = "password_reset_token")
+    @JsonIgnore
+    private String passwordResetToken;
     @Column(name = "issued_at")
     private Timestamp issuedAt;
 
@@ -61,6 +64,15 @@ public class ApiKey implements Serializable {
 
     public void setApikey(String apikey) {
         this.apikey = apikey;
+    }
+    
+    @JsonIgnore
+    public String getPasswordResetToken() {
+        return passwordResetToken;
+    }
+    @JsonIgnore
+    public void setPasswordResetToken(String passwordResetToken) {
+        this.passwordResetToken = passwordResetToken;
     }
 
     public Timestamp getIssuedAt() {

@@ -27,7 +27,7 @@ public class ErrController implements ErrorController{
         if(uri.startsWith("/api/")){
             return null;
         }
-        if(uri.startsWith("/en/")){
+        if(uri.startsWith("/en/")||uri.endsWith("/en")){
             response.setStatus(HttpStatus.OK.value());
             return "forward:/en/index.html";
         }else{

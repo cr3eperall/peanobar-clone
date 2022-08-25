@@ -17,6 +17,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.NotFound;
 import org.hibernate.annotations.NotFoundAction;
 
@@ -37,6 +39,7 @@ public class Order implements Serializable {
     @NotFound(action = NotFoundAction.IGNORE)
     @ManyToOne
     @JoinColumn(name = "owner_uuid", referencedColumnName = "uuid", nullable = false)
+    @Fetch(value = FetchMode.JOIN)
     private User owner;
     
     private Integer total;

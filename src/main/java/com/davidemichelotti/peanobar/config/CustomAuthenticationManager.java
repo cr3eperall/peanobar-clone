@@ -34,12 +34,13 @@ public class CustomAuthenticationManager implements AuthenticationManager{
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         String uuid=authentication.getPrincipal().toString();
         String apiKey=authentication.getCredentials().toString();
-        if (uuid==null || apiKey==null) {
+        if (uuid==null || apiKey==null || uuid.equals("null") || apiKey.equals("null")) {
             throw new BadCredentialsException("Wrong API Key or UUID");
         }
         if(!apiKeyService.verifyKey(UUIDFormatter.format(uuid), apiKey)){
             throw new BadCredentialsException("Wrong API Key or UUID");
         }
+        
         List<SimpleGrantedAuthority> authorities=new ArrayList<>();
         UserDto user=userService.findUserByUUID(UUIDFormatter.format(uuid));
         authorities.add(new SimpleGrantedAuthority(user.getRole().getName()));

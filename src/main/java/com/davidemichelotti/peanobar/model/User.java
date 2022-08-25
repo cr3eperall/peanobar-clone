@@ -18,6 +18,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -49,6 +51,7 @@ public class User implements Serializable {
 
     @ManyToOne()
     @JoinColumn(name = "role_id", nullable = false, referencedColumnName = "id")
+    @Fetch(value = FetchMode.JOIN)
     private Role role;
 
     @Column(name = "email", columnDefinition = "VARCHAR(128)")
@@ -57,8 +60,9 @@ public class User implements Serializable {
     @Column(name = "classroom", columnDefinition = "VARCHAR(16)")
     private String classroom;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.REMOVE)
     @JoinColumn(name = "uuid", referencedColumnName = "uuid")
+    @Fetch(value = FetchMode.JOIN)
     private Wallet wallet;
 
     public User(UUID uuid, String name, String username, String password, Role role, String email, String classroom, Wallet wallet) {

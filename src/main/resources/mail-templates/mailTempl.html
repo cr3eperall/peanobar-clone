@@ -1,0 +1,44 @@
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title th:text="#{title}"></title>
+    <style>
+        .buttonLink{
+            margin-left: 1.5em;
+            border: 2px solid black;
+            border-radius: 10px;
+            padding: 10px;
+            text-decoration: none !important;
+            color: black;
+            background-color: lightblue;
+            transition: .1s;
+            box-shadow: 0px 2px 5px black ;
+        }
+        .buttonLink:hover{
+            box-shadow: 0px 1px 5px black ;
+            transition: .1s;
+        }
+        .buttonLink:active{
+            box-shadow: 0px 0px 0px black ;
+            transition: .1s;
+        }
+        .buttonLink:visited{
+            text-decoration: none !important;
+            color: black;
+        }
+    </style>
+  </head>
+  <body style="font-family: Sans-serif;">
+    <div style="background-color: rgb(111, 165, 239); padding: 1em;">
+        <h2 style="margin-left: .5em;" th:text="#{hello(${name})}"></h2>
+        <h3 style="margin-left: 1em;" th:text="#{msgWasSent}"></h3>
+        <h3 style="margin-left: 1em;" th:text="#{clickBelow}"></h3>
+        <a class="buttonLink" th:href="#{langUrl(${url},${token})}" th:text="#{title}"></a>
+        <h3 style="margin-left: 1em; margin-bottom: .5em;" th:text="#{orUrl}"></h3>
+        <a style="margin-left: 1.5em; font-weight: normal;" th:href="#{langUrl(${url},${token})}" th:text="#{langUrl(${url},${token})}"></a>
+    </div>
+    <footer>
+        <p th:text="#{ignore}"></p>
+    </footer>
+  </body>
+</html>

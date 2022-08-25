@@ -23,11 +23,10 @@ public class UserDto {
     private Role role;
     private int balance;
     private String classroom;
-    private ArrayList<OrderDto> orders;
     
-    //private ConfigurableApplicationContext context = new AnnotationConfigApplicationContext();
+    private OrderServiceImpl orderService;
     
-    public UserDto(UUID uuid, String fullName, String username, String email, Role role, int balance, String classroom, ArrayList<OrderDto> orders) {
+    public UserDto(UUID uuid, String fullName, String username, String email, Role role, int balance, String classroom, OrderServiceImpl orderService) {
         this.uuid = uuid;
         this.fullName = fullName;
         this.username = username;
@@ -35,9 +34,9 @@ public class UserDto {
         this.role = role;
         this.balance = balance;
         this.classroom = classroom;
-        this.orders = orders;
+        this.orderService = orderService;
     }
-    public UserDto(User user, OrderServiceImpl orderService) {
+    public UserDto(User user,OrderServiceImpl orderService) {
         this.uuid = user.getUuid();
         this.fullName = user.getName();
         this.username = user.getUsername();
@@ -45,8 +44,7 @@ public class UserDto {
         this.role = user.getRole();
         this.balance = user.getWallet().getBalance();
         this.classroom = user.getClassroom();
-        //context.refresh();
-        this.orders = (ArrayList<OrderDto>) orderService.getOrdersByUser(user.getUuid());
+        this.orderService=orderService;
     }
 
     public UUID getUuid() {
@@ -74,32 +72,7 @@ public class UserDto {
     }
 
     public OrderDto getCartOrder() {
-        for (OrderDto order : orders) {
-            if (order.getStatus()==Order.OrderStatus.IN_CART) {
-                return order;
-            }
-        }
-        return null;
-    }
-    
-    public OrderDto[] getOldOrders(int size, int page){
-        OrderDto[] oldOrders=new OrderDto[orders.size()-(page*size)];
-        int idx=0;
-        for (OrderDto order : oldOrders) {
-            if (order.getStatus()==Order.OrderStatus.COMPLETED) {
-                oldOrders[idx++]=order;
-            }
-        }
-        return oldOrders;
-    }
-    
-    public boolean isOrderInProgress(){
-        for (OrderDto order : orders) {
-            if (order.getStatus()==Order.OrderStatus.IN_PROGRESS) {
-                return true;
-            }
-        }
-        return false;
+        return orderService.getCartOrderForUUID(uuid);
     }
 
     @Override
@@ -111,7 +84,6 @@ public class UserDto {
         hash = 37 * hash + Objects.hashCode(this.email);
         hash = 37 * hash + Objects.hashCode(this.role);
         hash = 37 * hash + this.balance;
-        hash = 37 * hash + Objects.hashCode(this.orders);
         return hash;
     }
 
@@ -142,10 +114,7 @@ public class UserDto {
         if (!Objects.equals(this.uuid, other.uuid)) {
             return false;
         }
-        if (!Objects.equals(this.role, other.role)) {
-            return false;
-        }
-        return Objects.equals(this.orders, other.orders);
+        return Objects.equals(this.role, other.role);
     }
 
     @Override
