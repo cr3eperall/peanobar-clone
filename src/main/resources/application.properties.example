@@ -14,9 +14,9 @@ peanobar.stopAcceptingOrders=14:00
 spring.servlet.multipart.max-file-size=16777215
 
 # Mail
-spring.mail.host=
-spring.mail.port=
+spring.mail.host=smtp.gmail.com
+spring.mail.port=587
 spring.mail.username=
 spring.mail.password=
-spring.mail.properties.mail.smtp.auth=
-spring.mail.properties.mail.smtp.starttls.enable=
+spring.mail.properties.mail.smtp.auth=true
+spring.mail.properties.mail.smtp.starttls.enable=true
