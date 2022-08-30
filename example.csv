@@ -1,0 +1,4 @@
+fullname,username,email,classroom,role,password
+test 1,test1.peanobar,test.user@example.com,4C info,1,test1234
+test bar 2,bar.test,test.bar@example.com,,2,test12345
+test admin,admin.test,test.admin@example.com,,3,test123456
