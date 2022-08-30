@@ -18,9 +18,11 @@ import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -122,11 +124,11 @@ public class UserServiceImpl implements UserService {
     public UserDto createUser(UserDto user, String rawPw) {
         UserDto existingUser=findUserByUsername(user.getUsername());
         if (existingUser!=null) {
-            return null;
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,"Error while creating user: username already exists");
         }
         existingUser=findUserByEmail(user.getEmail());
         if (existingUser!=null) {
-            return null;
+            throw new HttpClientErrorException(HttpStatus.BAD_REQUEST,"Error while creating user: email already exists");
         }
         
         User repoUser=new User();
@@ -250,8 +252,13 @@ public class UserServiceImpl implements UserService {
             return -1;
         }
         userRepo.delete(repoUser);
-        walletRepo.deleteById(repoUser.getUuid());
-        apiKeyRepo.deleteById(repoUser.getUuid());
+        if (walletRepo.existsById(repoUser.getUuid())) {
+            walletRepo.deleteById(repoUser.getUuid());
+        }
+        if (apiKeyRepo.existsById(repoUser.getUuid())) {
+            apiKeyRepo.deleteById(repoUser.getUuid());
+        }
+        
         return 0;
     }
 
