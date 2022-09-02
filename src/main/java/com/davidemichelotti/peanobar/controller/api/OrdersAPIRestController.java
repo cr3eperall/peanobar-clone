@@ -20,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -32,7 +31,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.HttpServerErrorException;
 
 /**
  *
@@ -144,9 +142,9 @@ public class OrdersAPIRestController {
         if(cart.getTotal()>user.getBalance()){
             return new ResponseEntity("Not enough balance in wallet for user with uuid "+ user.getUuid().toString(),HttpStatus.BAD_REQUEST);
         }
+        OrderDto orderMade=orderService.sendOrder(cart.getId());
         
-        userService.updateBalance(user.getUuid(), user.getBalance()-cart.getTotal());
-        ResponseEntity resp=new ResponseEntity(orderService.updateStatus(cart.getId(), Order.OrderStatus.IN_PROGRESS),HttpStatus.OK);
+        ResponseEntity resp=new ResponseEntity(orderMade,orderMade==null ? HttpStatus.INTERNAL_SERVER_ERROR : HttpStatus.OK);
         return resp;
     }
     

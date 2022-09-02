@@ -8,9 +8,11 @@ import com.davidemichelotti.peanobar.dto.OrderDto;
 import com.davidemichelotti.peanobar.model.Order;
 import com.davidemichelotti.peanobar.model.OrderItem;
 import com.davidemichelotti.peanobar.model.Product;
+import com.davidemichelotti.peanobar.model.Wallet;
 import com.davidemichelotti.peanobar.repository.OrderItemsRepository;
 import com.davidemichelotti.peanobar.repository.OrderRepository;
 import com.davidemichelotti.peanobar.repository.UserRepository;
+import com.davidemichelotti.peanobar.repository.WalletRepository;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import java.util.Optional;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class OrderServiceImpl implements OrderService {
@@ -29,7 +32,8 @@ public class OrderServiceImpl implements OrderService {
     UserRepository userService;
     @Autowired
     OrderItemsRepository orderItemRepo;
-    //TODO remake paged queries and add getall
+    @Autowired
+    WalletRepository walletRepo;
 
     @Override
     public OrderDto getOrderById(long id) {
@@ -210,10 +214,38 @@ public class OrderServiceImpl implements OrderService {
         orderRepo.save(order);
         return new OrderDto(orderRepo.findById(orderId).get(),this);
     }
+
+    @Override
+    public OrderDto sendOrder(long orderId) {
+        if(!orderRepo.existsById(orderId)){
+            return null;
+        }
+        Order repoOrder =orderRepo.findById(orderId).get();
+        if (!walletRepo.existsById(repoOrder.getOwner().getUuid())) {
+            return null;
+        }
+        Wallet wallet=walletRepo.findById(repoOrder.getOwner().getUuid()).get();
+        int total=calcTotal(new OrderDto(repoOrder, this));
+        if (wallet.getBalance()<total) {
+            return null;
+        }
+        wallet.setBalance(wallet.getBalance()-total);
+        repoOrder.setStatus(Order.OrderStatus.IN_PROGRESS);
+        repoOrder.setMadeAt(Timestamp.valueOf(LocalDateTime.now()));
+        return new OrderDto(secureUpdate(repoOrder, wallet),this);
+    }
     
+    @Transactional
+    private Order secureUpdate(Order order, Wallet wallet){
+        walletRepo.save(wallet);
+        return orderRepo.save(order);
+    }
 
     @Override
     public OrderDto updateStatus(long orderId, Order.OrderStatus status) {
+        if (status==Order.OrderStatus.IN_PROGRESS) {
+            return null;
+        }
         if(!orderRepo.existsById(orderId)){
             return null;
         }

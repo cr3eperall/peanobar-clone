@@ -32,6 +32,7 @@ public interface OrderService {
     public OrderDto removeItem(long orderId, long itemId);
     public OrderDto editOrder(long orderId, OrderDto order);
     
+    public OrderDto sendOrder(long orderId);
     public OrderDto updateStatus(long orderId,Order.OrderStatus status);
     public OrderDto updateTime(long orderId);
     
